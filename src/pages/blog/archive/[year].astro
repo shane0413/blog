@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../../components/BaseHead.astro';
+import Footer from '../../../components/Footer.astro';
+import Header from '../../../components/Header.astro';
+import FormattedDate from '../../../components/FormattedDate.astro';
+import { SITE_TITLE } from '../../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const years = [...new Set(posts.map((post) => post.data.pubDate.getUTCFullYear()))];
+	return years.map((year) => ({
+		params: { year: String(year) },
+		props: {
+			year,
+			posts: posts
+				.filter((post) => post.data.pubDate.getUTCFullYear() === year)
+				.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+		},
+	}));
+}
+
+const { year, posts } = Astro.props;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`${year} 年文章归档 · ${SITE_TITLE}`} description={`${year} 年的文章归档`} />
+	</head>
+	<body>
+		<Header />
+		<main class="content-main">
+			<header class="page-heading">
+				<span class="eyebrow">文章存档</span>
+				<h1>{year} 年</h1>
+				<p>共记录了 {posts.length} 篇文章。</p>
+			</header>
+			<section class="post-list">
+				{posts.map((post) => (
+					<article class="post-row">
+						<a href={`/blog/${post.id}/`}>
+							{post.data.heroImage && (
+								<img src={post.data.heroImage.src} alt="" width="720" height="360" />
+							)}
+							<div>
+								<div class="post-row-meta">
+									<span>{post.data.category || '随笔'}</span>
+									<time><FormattedDate date={post.data.pubDate} /></time>
+								</div>
+								<h2>{post.data.title}</h2>
+								<p>{post.data.description}</p>
+							</div>
+						</a>
+					</article>
+				))}
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

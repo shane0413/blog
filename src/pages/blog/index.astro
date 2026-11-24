@@ -10,101 +10,72 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const categories = [...new Set(posts.map((post) => post.data.category || '随笔'))];
+const tags = [...new Set(posts.flatMap((post) => post.data.tags || []))];
+const archives = posts.reduce<Record<string, number>>((result, post) => {
+	const year = post.data.pubDate.getUTCFullYear();
+	result[year] = (result[year] || 0) + 1;
+	return result;
+}, {});
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-			<section>
-				<ul>
+		<main class="content-main">
+			<header class="page-heading">
+				<span class="eyebrow">文章归档 · {posts.length} 篇</span>
+				<h1>探索笔记与思考</h1>
+				<p>技术笔记、工具记录与生活片段。</p>
+			</header>
+			<section class="archive-layout">
+				<div class="post-list">
 					{posts.map((post) => (
-						<li>
+						<article class="post-row">
 							<a href={`/blog/${post.id}/`}>
 								{post.data.heroImage && (
 									<Image width={720} height={360} src={post.data.heroImage} alt="" />
 								)}
-								<h4 class="title">{post.data.title}</h4>
-								<p class="date">
-									<FormattedDate date={post.data.pubDate} />
-								</p>
+								<div>
+									<div class="post-row-meta">
+										<span>{post.data.category || '随笔'}</span>
+										<time><FormattedDate date={post.data.pubDate} /></time>
+									</div>
+									<h2>{post.data.title}</h2>
+									<p>{post.data.description}</p>
+								</div>
 							</a>
-						</li>
+						</article>
 					))}
-				</ul>
+				</div>
+				<aside class="archive-sidebar">
+					<div class="sidebar-card">
+						<h2>文章分类</h2>
+						<div class="category-list">
+							{categories.map((category) => (
+								<span>{category}</span>
+							))}
+						</div>
+					</div>
+					<div class="sidebar-card">
+						<h2>文章标签</h2>
+						<div class="tag-list">
+							{tags.map((tag) => <span>{tag}</span>)}
+						</div>
+					</div>
+					<div class="sidebar-card">
+						<h2>存档</h2>
+						<div class="archive-list">
+							{Object.entries(archives).sort(([a], [b]) => Number(b) - Number(a)).map(([year, count]) => (
+								<a href={`/blog/archive/${year}/`}><span>{year}</span><strong>{count}</strong></a>
+							))}
+						</div>
+					</div>
+				</aside>
 			</section>
 		</main>
 		<Footer />
