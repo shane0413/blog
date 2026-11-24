@@ -6,92 +6,34 @@ import QuoteShuffle from '../components/QuoteShuffle';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-
-const posts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+const posts = (await getCollection('blog')).sort((a,b)=>b.data.pubDate.valueOf()-a.data.pubDate.valueOf()).slice(0,4);
+const allPosts = await getCollection('blog');
+const categories = new Set(allPosts.map(p=>p.data.category || '随笔'));
+const tags = new Set(allPosts.flatMap(p=>p.data.tags || []));
 ---
-
-<!doctype html>
-<html lang="zh-CN">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main class="home-main">
-			<section class="hero-section">
-				<div class="hero-copy">
-					<span class="eyebrow">你好，我是 Shane（谢恩）</span>
-					<h1>在代码与文字之间，<br /><span>记录有意思的事。</span></h1>
-					<p>前端、后端、工具与生活随想。把偶然学到的东西，整理成可以再次打开的记忆。</p>
-					<QuoteShuffle client:load />
-					<div class="hero-actions">
-						<a class="primary-button" href="/blog">阅读文章 <span aria-hidden="true">→</span></a>
-						<a class="text-button" href="/about">认识一下</a>
-					</div>
-				</div>
-				<div class="profile-card">
-					<div class="profile-glow"></div>
-					<img src="https://github.com/shane0413.png" alt="Shane 的头像" width="180" height="180" />
-					<div class="profile-status"><span></span> 开启记录</div>
-				</div>
-			</section>
-
-			<section class="contact-strip" aria-label="联系方式">
-				<a href="mailto:shane00413@gmail.com"><span>邮箱</span><strong>shane00413@gmail.com</strong></a>
-				<a href="https://t.me/shane_0413" target="_blank"><span>Telegram</span><strong>@shane_0413</strong></a>
-				<a href="https://github.com/shane0413" target="_blank"><span>GitHub</span><strong>@shane0413</strong></a>
-				<div><span>QQ</span><strong>3514143296</strong></div>
-			</section>
-
-			<section class="latest-section">
-				<div class="section-heading">
-					<div>
-						<span class="eyebrow">最新内容</span>
-						<h2>最近的文章</h2>
-					</div>
-					<a href="/blog">查看全部 <span aria-hidden="true">→</span></a>
-				</div>
-				<div class="latest-grid">
-					{posts.map((post) => (
-						<article>
-							<a href={`/blog/${post.id}/`}>
-								{post.data.heroImage && (
-									<img src={post.data.heroImage.src} alt="" width="720" height="360" />
-								)}
-								<div class="latest-meta">
-									<span>{post.data.category || '随笔'}</span>
-									<time><FormattedDate date={post.data.pubDate} /></time>
-								</div>
-								<h3>{post.data.title}</h3>
-								<p>{post.data.description}</p>
-							</a>
-						</article>
-					))}
-				</div>
-			</section>
-
-			<section class="friends-section">
-				<div class="section-heading">
-					<div>
-						<span class="eyebrow">友邻站点</span>
-						<h2>友情链接</h2>
-					</div>
-				</div>
-				<div class="friends-grid">
-					<a href="https://github.com/" target="_blank" rel="noreferrer">
-						<span>G</span><div><strong>GitHub</strong><small>全球开发者社区</small></div>
-					</a>
-					<a href="https://astro.build/" target="_blank" rel="noreferrer">
-						<span>A</span><div><strong>Astro</strong><small>内容驱动的网站框架</small></div>
-					</a>
-					<a href="https://telegram.org/" target="_blank" rel="noreferrer">
-						<span>T</span><div><strong>Telegram</strong><small>即时、开放与快速</small></div>
-					</a>
-				</div>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+<!doctype html><html lang="zh-CN"><head><BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} /></head><body>
+<Header />
+<main class="home-main">
+  <section class="hero-section">
+    <div class="hero-copy">
+      <span class="eyebrow">PERSONAL WEBSITE / EST. 2021</span>
+      <h1>你好，我是 Shane。<br /><span>这里记录我感兴趣的一切。</span></h1>
+      <p>关于技术、互联网、工具与日常生活。把遇到的问题记下来，把值得分享的东西整理好。</p>
+      <div class="hero-actions"><a class="primary-button" href="/blog/">浏览文章 <span aria-hidden="true">↗</span></a><a class="text-button" href="/about/">关于我</a></div>
+    </div>
+    <div class="hero-side"><img src="https://github.com/shane0413.png" alt="Shane 的头像" width="112" height="112" /><span>SHANE / ONLINE</span><small>持续记录，持续探索。</small></div>
+  </section>
+  <section class="quote-section" aria-label="随机文案"><div class="quote-topline"><span>NOTE TO SELF</span><span>01 — 26</span></div><QuoteShuffle client:load /></section>
+  <section class="contact-strip" aria-label="联系方式">
+    <a href="mailto:shane00413@gmail.com"><span>EMAIL</span><strong>shane00413@gmail.com</strong></a>
+    <a href="https://t.me/shane_0413" target="_blank" rel="noreferrer"><span>TELEGRAM</span><strong>@shane_0413</strong></a>
+    <a href="https://github.com/shane0413" target="_blank" rel="noreferrer"><span>GITHUB</span><strong>@shane0413</strong></a>
+    <div><span>QQ</span><strong>3514143296</strong></div>
+  </section>
+  <section class="latest-section">
+    <div class="section-heading"><div><span class="eyebrow">LATEST WRITING</span><h2>最近写的</h2></div><a href="/blog/">全部文章 <span aria-hidden="true">↗</span></a></div>
+    <div class="latest-list">{posts.map((post,i)=><article class="latest-item"><span class="item-index">{String(i+1).padStart(2,'0')}</span><div class="latest-item-main"><div class="latest-meta"><span>{post.data.category || '随笔'}</span><time><FormattedDate date={post.data.pubDate} /></time></div><h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3><p>{post.data.description}</p></div><a class="item-arrow" href={`/blog/${post.id}/`} aria-label={`阅读${post.data.title}`}>↗</a></article>)}</div>
+  </section>
+  <section class="site-index"><div><span class="eyebrow">EXPLORE</span><h2>从这里继续探索。</h2></div><div class="index-links"><a href="/categories/"><span>01</span>文章分类 <b>↗</b></a><a href="/tags/"><span>02</span>标签索引 <b>↗</b></a><a href="/archive/"><span>03</span>时间归档 <b>↗</b></a><a href="/friends/"><span>04</span>友情链接 <b>↗</b></a></div></section>
+  <div class="home-count"><span>{allPosts.length} POSTS</span><span>{categories.size} CATEGORIES</span><span>{tags.size} TAGS</span></div>
+</main><Footer /></body></html>

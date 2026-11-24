@@ -1,0 +1,13 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+const posts = await getCollection('blog');
+const years = [...new Set(posts.map(p => p.data.pubDate.getUTCFullYear()))].sort((a,b)=>b-a);
+---
+<!doctype html><html lang="zh-CN"><head><BaseHead title={`文章归档 · ${SITE_TITLE}`} description="按年份回顾所有文章。" /></head>
+<body><Header /><main class="content-main"><header class="page-heading"><span class="eyebrow">ARCHIVE / {posts.length} POSTS</span><h1>时间留下的记录</h1><p>所有文章按年份整理在这里。</p></header>
+<div class="taxonomy-grid">{years.map(year => { const count=posts.filter(p=>p.data.pubDate.getUTCFullYear()===year).length; return <a class="taxonomy-card" href={`/blog/archive/${year}/`}><strong>{year} 年</strong><span>{count} 篇文章　→</span></a>; })}</div>
+</main><Footer /></body></html>

@@ -57,14 +57,14 @@ const archives = posts.reduce<Record<string, number>>((result, post) => {
 						<h2>文章分类</h2>
 						<div class="category-list">
 							{categories.map((category) => (
-								<span>{category}</span>
+								<a href={`/categories/${encodeURIComponent(category)}/`}>{category}</a>
 							))}
 						</div>
 					</div>
 					<div class="sidebar-card">
 						<h2>文章标签</h2>
 						<div class="tag-list">
-							{tags.map((tag) => <span>{tag}</span>)}
+							{tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}># {tag}</a>)}
 						</div>
 					</div>
 					<div class="sidebar-card">

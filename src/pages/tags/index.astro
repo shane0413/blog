@@ -1,0 +1,15 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+const posts = await getCollection('blog');
+const counts = new Map<string, number>();
+for (const post of posts) for (const tag of post.data.tags || []) counts.set(tag, (counts.get(tag) || 0) + 1);
+const tags = [...counts.entries()].sort((a,b) => b[1]-a[1]);
+---
+<!doctype html><html lang="zh-CN"><head><BaseHead title={`文章标签 · ${SITE_TITLE}`} description="通过标签发现相关内容。" /></head>
+<body><Header /><main class="content-main"><header class="page-heading"><span class="eyebrow">CONTENT / TAGS</span><h1>文章标签</h1><p>用关键词连接不同文章。</p></header>
+<div class="taxonomy-cloud">{tags.map(([tag,count]) => <a href={`/tags/${encodeURIComponent(tag)}/`}># {tag} <span>({count})</span></a>)}</div>
+</main><Footer /></body></html>

@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import { SITE_TITLE } from '../../consts';
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const categories = [...new Set(posts.map(p => p.data.category || '随笔'))];
+  return categories.map(category => ({ params: { category }, props: { category, posts: posts.filter(p => (p.data.category || '随笔') === category).sort((a,b) => b.data.pubDate.valueOf()-a.data.pubDate.valueOf()) } }));
+}
+const { category, posts } = Astro.props;
+---
+<!doctype html><html lang="zh-CN"><head><BaseHead title={`${category} · ${SITE_TITLE}`} description={`分类「${category}」下的文章。`} /></head>
+<body><Header /><main class="content-main"><header class="page-heading"><span class="eyebrow">CATEGORY / {posts.length} POSTS</span><h1>{category}</h1><p>这个主题下的所有文章。</p></header>
+<section class="post-list">{posts.map(post => <article class="post-row"><a href={`/blog/${post.id}/`}>{post.data.heroImage && <img src={post.data.heroImage.src} alt="" width="720" height="360" />}<div><div class="post-row-meta"><span>{post.data.category || '随笔'}</span><time><FormattedDate date={post.data.pubDate} /></time></div><h2>{post.data.title}</h2><p>{post.data.description}</p></div></a></article>)}</section></main><Footer /></body></html>

@@ -1,0 +1,21 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FriendIcon from '../components/FriendIcon';
+import { FiExternalLink } from 'react-icons/fi';
+import { SITE_TITLE } from '../consts';
+type FriendIconName = 'github' | 'astro' | 'telegram' | 'apple' | 'blog';
+const friends: Array<{name: string; url: string; desc: string; icon: FriendIconName}> = [
+ {name:'GitHub',url:'https://github.com/',desc:'代码托管与开源协作',icon:'github'},
+ {name:'Astro',url:'https://astro.build/',desc:'内容驱动的现代 Web 框架',icon:'astro'},
+ {name:'Telegram',url:'https://telegram.org/',desc:'快速、简洁、开放的即时通讯',icon:'telegram'},
+ {name:'Apple',url:'https://www.apple.com/',desc:'科技与设计的灵感来源',icon:'apple'},
+ {name:'站长好朋友的博客',url:'https://blog.suloulong.ccwu.cc',desc:'站长一个好朋友的博客',icon:'blog'}
+];
+---
+<!doctype html><html lang="zh-CN"><head><BaseHead title={`友情链接 · ${SITE_TITLE}`} description="一些值得访问的网站与工具。" /></head>
+<body><Header /><main class="content-main"><header class="page-heading"><span class="eyebrow">FRIENDS / LINKS</span><h1>好站值得分享。</h1><p>这里收录我常用、喜欢或觉得值得探索的网站。</p></header>
+<div class="friends-page-grid">{friends.map(friend=><a class="friend-card" href={friend.url} target="_blank" rel="noopener noreferrer"><span class="friend-avatar"><FriendIcon name={friend.icon} /></span><span class="friend-details"><strong>{friend.name}</strong><small>{friend.desc}</small><small class="friend-url">{friend.url}</small></span><span class="friend-link-arrow"><FiExternalLink aria-hidden="true" /></span></a>)}</div>
+<p style="margin-top:30px;color:var(--muted);font-size:14px">友情链接申请：请通过 Telegram 或邮件联系我，交换链接时请附上站点名称、网址和一句简介。</p>
+</main><Footer /></body></html>
