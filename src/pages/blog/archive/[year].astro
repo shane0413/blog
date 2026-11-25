@@ -1,4 +1,4 @@
----
+it---
 import { withBase } from '../../../utils/paths';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
@@ -41,9 +41,11 @@ const { year, posts } = Astro.props;
 				{posts.map((post) => (
 					<article class="post-row">
 						<a href={withBase(`/blog/${post.id}/`)}>
-							{post.data.heroImage && (
-								<img src={post.data.heroImage.src} alt="" width="720" height="360" />
-							)}
+							{typeof post.data.heroImage === 'string' ? (
+								<img src={post.data.heroImage} alt="" width="720" height="360" loading="lazy" />
+							) : post.data.heroImage ? (
+								<img src={post.data.heroImage.src} alt="" width="720" height="360" loading="lazy" />
+							) : null}
 							<div>
 								<div class="post-row-meta">
 									<span>{post.data.category || '随笔'}</span>

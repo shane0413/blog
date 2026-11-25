@@ -17,7 +17,11 @@ const { title, description, pubDate, updatedDate, heroImage, category = '随笔'
     <Header />
     <main class="content-main post-layout">
       <article>
-        {heroImage && <div class="hero-image"><Image width={1200} height={600} src={heroImage} alt={`${title} 配图`} /></div>}
+        {typeof heroImage === 'string' ? (
+          <div class="hero-image"><img src={heroImage} alt={`${title} 配图`} width="1200" height="600" /></div>
+        ) : heroImage ? (
+          <div class="hero-image"><Image width={1200} height={600} src={heroImage} alt={`${title} 配图`} /></div>
+        ) : null}
         <div class="prose">
           <header class="title">
             <a class="post-category" href={withBase(`/categories/${encodeURIComponent(category)}/`)}>{category}</a>

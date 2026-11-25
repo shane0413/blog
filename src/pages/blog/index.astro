@@ -38,9 +38,11 @@ const archives = posts.reduce<Record<string, number>>((result, post) => {
 					{posts.map((post) => (
 						<article class="post-row">
 							<a href={withBase(`/blog/${post.id}/`)}>
-								{post.data.heroImage && (
+								{typeof post.data.heroImage === 'string' ? (
+									<img src={post.data.heroImage} alt="" width="720" height="360" loading="lazy" />
+								) : post.data.heroImage ? (
 									<Image width={720} height={360} src={post.data.heroImage} alt="" />
-								)}
+								) : null}
 								<div>
 									<div class="post-row-meta">
 										<span>{post.data.category || '随笔'}</span>
