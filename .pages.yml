@@ -1,0 +1,48 @@
+
+media:
+  input: src/assets
+  output: ../../assets
+  categories: [image]
+
+content:
+  - name: posts
+    label: 文章管理
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: 标题
+        type: string
+        required: true
+
+      - name: description
+        label: 文章描述
+        type: text
+        required: true
+
+      - name: pubDate
+        label: 发布时间
+        type: date
+        required: true
+
+      - name: updatedDate
+        label: 更新时间
+        type: date
+
+      - name: heroImage
+        label: 封面图片
+        type: image
+
+      - name: category
+        label: 分类
+        type: string
+
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+
+      - name: body
+        label: 正文
+        type: rich-text
