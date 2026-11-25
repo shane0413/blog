@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../utils/paths';
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
@@ -36,7 +37,7 @@ const archives = posts.reduce<Record<string, number>>((result, post) => {
 				<div class="post-list">
 					{posts.map((post) => (
 						<article class="post-row">
-							<a href={`/blog/${post.id}/`}>
+							<a href={withBase(`/blog/${post.id}/`)}>
 								{post.data.heroImage && (
 									<Image width={720} height={360} src={post.data.heroImage} alt="" />
 								)}
@@ -57,21 +58,21 @@ const archives = posts.reduce<Record<string, number>>((result, post) => {
 						<h2>文章分类</h2>
 						<div class="category-list">
 							{categories.map((category) => (
-								<a href={`/categories/${encodeURIComponent(category)}/`}>{category}</a>
+								<a href={withBase(`/categories/${encodeURIComponent(category)}/`)}>{category}</a>
 							))}
 						</div>
 					</div>
 					<div class="sidebar-card">
 						<h2>文章标签</h2>
 						<div class="tag-list">
-							{tags.map((tag) => <a href={`/tags/${encodeURIComponent(tag)}/`}># {tag}</a>)}
+							{tags.map((tag) => <a href={withBase(`/tags/${encodeURIComponent(tag)}/`)}># {tag}</a>)}
 						</div>
 					</div>
 					<div class="sidebar-card">
 						<h2>存档</h2>
 						<div class="archive-list">
 							{Object.entries(archives).sort(([a], [b]) => Number(b) - Number(a)).map(([year, count]) => (
-								<a href={`/blog/archive/${year}/`}><span>{year}</span><strong>{count}</strong></a>
+								<a href={withBase(`/blog/archive/${year}/`)}><span>{year}</span><strong>{count}</strong></a>
 							))}
 						</div>
 					</div>

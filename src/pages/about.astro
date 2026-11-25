@@ -1,23 +1,63 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import { withBase } from '../utils/paths';
 ---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <BaseHead title={`关于我 · ${SITE_TITLE}`} description="关于 Shane：个人介绍、关注领域与联系方式。" />
+  </head>
+  <body>
+    <Header />
+    <main class="content-main about-page">
+      <header class="page-heading about-heading">
+        <span class="eyebrow">ABOUT / SHANE</span>
+        <h1>关于我。</h1>
+        <p>一个喜欢折腾技术、记录问题，也愿意持续探索新事物的独立开发者。</p>
+      </header>
 
-<Layout
-	title="关于 Shane"
-	description="我是 Shane（谢恩），这里是我的个人部落格"
-	pubDate={new Date('August 08 2021')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		你好，我是 Shane（谢恩）。我喜欢把技术问题拆解清楚，也喜欢把生活里零散的瞬间写下来。
-	</p>
+      <section class="about-intro" aria-labelledby="about-intro-title">
+        <div class="about-avatar-wrap">
+          <img class="about-avatar" src="https://github.com/shane0413.png" alt="Shane 的头像" width="112" height="112" loading="lazy" />
+          <span>SHANE</span>
+        </div>
+        <div class="about-copy">
+          <span class="eyebrow">A LITTLE INTRODUCTION</span>
+          <h2 id="about-intro-title">你好，我是 Shane。</h2>
+          <p>我喜欢把复杂的问题拆解清楚，也喜欢研究工具、系统和软件背后的工作方式。遇到值得记录的内容时，会把过程和结论整理成文章，方便以后查阅，也希望能给其他人一些参考。</p>
+          <p>这个网站是我的个人空间，内容主要围绕技术实践、互联网、开发工具，以及日常生活中的一些想法。这里不追求固定主题，记录的重点是自己真正体验和整理过的东西。</p>
+        </div>
+      </section>
 
-	<p>
-		这个部落格主要记录各类技术文章、开发经验、工具实践，以及不那么严肃的生活想法。希望这些文字可以帮你节省一点时间，也能为我自己留下清晰的痕迹。
-	</p>
+      <section class="about-section" aria-labelledby="about-interests-title">
+        <div class="about-section-heading">
+          <span class="eyebrow">WHAT I LIKE</span>
+          <h2 id="about-interests-title">关注的方向</h2>
+        </div>
+        <div class="about-interest-list">
+          <article><span>01</span><div><h3>开发与开源</h3><p>Web 开发、编程工具、开源项目，以及把想法真正做成产品的过程。</p></div></article>
+          <article><span>02</span><div><h3>系统与设备</h3><p>Linux、Android、系统定制和设备折腾，关注开放性、可控性与实际体验。</p></div></article>
+          <article><span>03</span><div><h3>记录与分享</h3><p>整理遇到的问题、解决过程和使用经验，让零散的信息变得更容易查找。</p></div></article>
+        </div>
+      </section>
 
-	<p>
-		可以通过邮件 shane00413@gmail.com、Telegram @shane_0413 或 QQ 3514143296 找到我；GitHub 是 shane0413。
-	</p>
-</Layout>
+      <section class="about-contact" aria-labelledby="about-contact-title">
+        <div>
+          <span class="eyebrow">GET IN TOUCH</span>
+          <h2 id="about-contact-title">保持联系。</h2>
+          <p>交流技术问题、分享项目，或者只是打个招呼，都可以通过下面的方式联系我。</p>
+        </div>
+        <div class="about-contact-links">
+          <a href="mailto:shane00413@gmail.com"><span>EMAIL</span><strong>shane00413@gmail.com</strong><b>↗</b></a>
+          <a href="https://t.me/shane_0413" target="_blank" rel="noopener noreferrer"><span>TELEGRAM</span><strong>@shane_0413</strong><b>↗</b></a>
+          <a href="https://github.com/shane0413" target="_blank" rel="noopener noreferrer"><span>GITHUB</span><strong>@shane0413</strong><b>↗</b></a>
+        </div>
+      </section>
+      <div class="about-back"><a href={withBase('/')}>返回首页 <span>↗</span></a></div>
+    </main>
+    <Footer />
+  </body>
+</html>

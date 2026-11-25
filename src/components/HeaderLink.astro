@@ -1,24 +1,26 @@
 ---
 import type { HTMLAttributes } from 'astro/types';
+import { withBase } from '../utils/paths';
 
-type Props = HTMLAttributes<'a'>;
-
+type Props = HTMLAttributes<'a'> & { href: string };
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const target = withBase(href);
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, '') || '/';
+const currentPath = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const targetPath = new URL(target, Astro.url).pathname.replace(/\/+$/, '') || '/';
+const isHomeLink = href === '/';
+const isBlogArchive = targetPath.endsWith('/blog') && currentPath.startsWith(`${targetPath}/archive`);
+const archiveBase = `${basePath}/blog/archive`.replace(/^\/\//, '/');
+const isArchivePage = targetPath.endsWith('/archive') && currentPath.startsWith(archiveBase);
+const isActive = isHomeLink
+  ? currentPath === basePath
+  : isArchivePage || (!isBlogArchive && (currentPath === targetPath || currentPath.startsWith(`${targetPath}/`)));
 ---
-
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
-	<slot />
+<a
+  href={target}
+  class:list={[className, { active: isActive }]}
+  aria-current={isActive ? 'page' : undefined}
+  {...props}
+>
+  <slot />
 </a>
-<style>
-	a {
-		display: inline-block;
-		text-decoration: none;
-	}
-	a.active {
-		font-weight: bolder;
-		text-decoration: underline;
-	}
-</style>

@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/paths';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -19,7 +20,7 @@ const tags = new Set(allPosts.flatMap(p=>p.data.tags || []));
       <span class="eyebrow">PERSONAL WEBSITE / EST. 2021</span>
       <h1>你好，我是 Shane。<br /><span>这里记录我感兴趣的一切。</span></h1>
       <p>关于技术、互联网、工具与日常生活。把遇到的问题记下来，把值得分享的东西整理好。</p>
-      <div class="hero-actions"><a class="primary-button" href="/blog/">浏览文章 <span aria-hidden="true">↗</span></a><a class="text-button" href="/about/">关于我</a></div>
+      <div class="hero-actions"><a class="primary-button" href={withBase('/blog/')}>浏览文章 <span aria-hidden="true">↗</span></a><a class="text-button" href={withBase('/about/')}>关于我</a></div>
     </div>
     <div class="hero-side"><img src="https://github.com/shane0413.png" alt="Shane 的头像" width="112" height="112" /><span>SHANE / ONLINE</span><small>持续记录，持续探索。</small></div>
   </section>
@@ -31,9 +32,9 @@ const tags = new Set(allPosts.flatMap(p=>p.data.tags || []));
     <div><span>QQ</span><strong>3514143296</strong></div>
   </section>
   <section class="latest-section">
-    <div class="section-heading"><div><span class="eyebrow">LATEST WRITING</span><h2>最近写的</h2></div><a href="/blog/">全部文章 <span aria-hidden="true">↗</span></a></div>
-    <div class="latest-list">{posts.map((post,i)=><article class="latest-item"><span class="item-index">{String(i+1).padStart(2,'0')}</span><div class="latest-item-main"><div class="latest-meta"><span>{post.data.category || '随笔'}</span><time><FormattedDate date={post.data.pubDate} /></time></div><h3><a href={`/blog/${post.id}/`}>{post.data.title}</a></h3><p>{post.data.description}</p></div><a class="item-arrow" href={`/blog/${post.id}/`} aria-label={`阅读${post.data.title}`}>↗</a></article>)}</div>
+    <div class="section-heading"><div><span class="eyebrow">LATEST WRITING</span><h2>最近写的</h2></div><a href={withBase('/blog/')}>全部文章 <span aria-hidden="true">↗</span></a></div>
+    <div class="latest-list">{posts.map((post,i)=><article class="latest-item"><span class="item-index">{String(i+1).padStart(2,'0')}</span><div class="latest-item-main"><div class="latest-meta"><span>{post.data.category || '随笔'}</span><time><FormattedDate date={post.data.pubDate} /></time></div><h3><a href={withBase(`/blog/${post.id}/`)}>{post.data.title}</a></h3><p>{post.data.description}</p></div><a class="item-arrow" href={withBase(`/blog/${post.id}/`)} aria-label={`阅读${post.data.title}`}>↗</a></article>)}</div>
   </section>
-  <section class="site-index"><div><span class="eyebrow">EXPLORE</span><h2>从这里继续探索。</h2></div><div class="index-links"><a href="/categories/"><span>01</span>文章分类 <b>↗</b></a><a href="/tags/"><span>02</span>标签索引 <b>↗</b></a><a href="/archive/"><span>03</span>时间归档 <b>↗</b></a><a href="/friends/"><span>04</span>友情链接 <b>↗</b></a></div></section>
+  <section class="site-index"><div><span class="eyebrow">EXPLORE</span><h2>从这里继续探索。</h2></div><div class="index-links"><a href={withBase('/categories/')}><span>01</span>文章分类 <b>↗</b></a><a href={withBase('/tags/')}><span>02</span>标签索引 <b>↗</b></a><a href={withBase('/archive/')}><span>03</span>时间归档 <b>↗</b></a><a href={withBase('/friends/')}><span>04</span>友情链接 <b>↗</b></a></div></section>
   <div class="home-count"><span>{allPosts.length} POSTS</span><span>{categories.size} CATEGORIES</span><span>{tags.size} TAGS</span></div>
 </main><Footer /></body></html>

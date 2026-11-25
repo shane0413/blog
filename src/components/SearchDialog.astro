@@ -1,63 +1,81 @@
 ---
 import { getCollection } from 'astro:content';
+import { withBase } from '../utils/paths';
 const posts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.map((post) => ({
-		title: post.data.title,
-		description: post.data.description,
-		href: `/blog/${post.id}/`,
-		category: post.data.category || '随笔',
-	}));
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map((post) => ({
+    title: post.data.title,
+    description: post.data.description,
+    href: withBase(`/blog/${post.id}/`),
+    category: post.data.category || '随笔',
+  }));
 ---
-
 <button class="search-trigger" type="button" aria-label="搜索文章" title="搜索文章">
-	<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-		<path d="m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-	</svg>
-	<span>搜索</span>
+  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+  <span>搜索</span>
 </button>
 <dialog class="search-dialog" aria-label="搜索文章">
-	<form method="dialog" class="search-shell">
-		<div class="search-field">
-			<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-				<path d="m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-			</svg>
-			<input type="search" placeholder="搜索标题、描述或分类…" autocomplete="off" />
-			<button value="cancel" aria-label="关闭搜索">ESC</button>
-		</div>
-		<div class="search-results"></div>
-	</form>
+  <div class="search-shell">
+    <div class="search-field">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="m21 21-4.35-4.35m2.35-5.15a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+      <input type="search" placeholder="搜索标题、描述或分类…" autocomplete="off" aria-label="搜索文章" />
+      <button class="search-close" type="button" aria-label="关闭搜索">ESC</button>
+    </div>
+    <div class="search-results" aria-live="polite"></div>
+  </div>
 </dialog>
-
 <script define:vars={{ posts }}>
-	const trigger = document.querySelector('.search-trigger');
-	const dialog = document.querySelector('.search-dialog');
-	const input = dialog?.querySelector('input');
-	const results = dialog?.querySelector('.search-results');
+  const trigger = document.querySelector('.search-trigger');
+  const dialog = document.querySelector('.search-dialog');
+  const input = dialog?.querySelector('input');
+  const results = dialog?.querySelector('.search-results');
+  const closeButton = dialog?.querySelector('.search-close');
 
-	const render = (query = '') => {
-		const needle = query.trim().toLowerCase();
-		const matches = posts.filter((post) =>
-			`${post.title} ${post.description} ${post.category}`.toLowerCase().includes(needle),
-		).slice(0, 8);
-		results.innerHTML = matches.length
-			? matches.map((post) => `
-				<a href="${post.href}">
-					<span>${post.category}</span>
-					<div><strong>${post.title}</strong><small>${post.description}</small></div>
-					<i>→</i>
-				</a>`).join('')
-			: '<p class="search-empty">没有找到相关文章</p>';
-	};
+  const render = (query = '') => {
+    if (!results) return;
+    const needle = query.trim().toLocaleLowerCase();
+    const matches = posts.filter((post) =>
+      `${post.title} ${post.description} ${post.category}`.toLocaleLowerCase().includes(needle),
+    ).slice(0, 10);
 
-	trigger?.addEventListener('click', () => {
-		dialog.showModal();
-		input.value = '';
-		render();
-		requestAnimationFrame(() => input.focus());
-	});
-	input?.addEventListener('input', () => render(input.value));
-	dialog?.addEventListener('click', (event) => {
-		if (event.target === dialog) dialog.close();
-	});
+    results.replaceChildren();
+    if (!matches.length) {
+      const empty = document.createElement('p');
+      empty.className = 'search-empty';
+      empty.textContent = '没有找到相关文章';
+      results.append(empty);
+      return;
+    }
+
+    for (const post of matches) {
+      const link = document.createElement('a');
+      link.href = post.href;
+      const category = document.createElement('span');
+      category.textContent = post.category;
+      const content = document.createElement('div');
+      const title = document.createElement('strong');
+      title.textContent = post.title;
+      const description = document.createElement('small');
+      description.textContent = post.description;
+      content.append(title, description);
+      const arrow = document.createElement('i');
+      arrow.textContent = '→';
+      link.append(category, content, arrow);
+      results.append(link);
+    }
+  };
+
+  trigger?.addEventListener('click', () => {
+    if (!(dialog instanceof HTMLDialogElement)) return;
+    dialog.showModal();
+    if (input) input.value = '';
+    render();
+    requestAnimationFrame(() => input?.focus());
+  });
+  input?.addEventListener('input', () => render(input.value));
+  closeButton?.addEventListener('click', () => dialog?.close());
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  dialog?.addEventListener('close', () => trigger instanceof HTMLElement && trigger.focus());
 </script>

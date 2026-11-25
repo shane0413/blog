@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../../utils/paths';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../../components/BaseHead.astro';
 import Footer from '../../../components/Footer.astro';
@@ -39,7 +40,7 @@ const { year, posts } = Astro.props;
 			<section class="post-list">
 				{posts.map((post) => (
 					<article class="post-row">
-						<a href={`/blog/${post.id}/`}>
+						<a href={withBase(`/blog/${post.id}/`)}>
 							{post.data.heroImage && (
 								<img src={post.data.heroImage.src} alt="" width="720" height="360" />
 							)}

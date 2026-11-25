@@ -10,7 +10,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://shane0413.github.io/blog',
+  site: 'https://shaneblog.pages.dev',
   integrations: [mdx(), sitemap(), react()],
 
   fonts: [

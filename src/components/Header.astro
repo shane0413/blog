@@ -2,10 +2,13 @@
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 import SearchDialog from './SearchDialog.astro';
+import { withBase } from '../utils/paths';
 ---
 <header class="site-header">
   <nav class="site-nav" aria-label="主导航">
-    <a class="brand" href="/" aria-label={SITE_TITLE}><span class="brand-word">SHANE<span class="brand-period">.</span></span></a>
+    <a class="brand" href={withBase('/')} aria-label={SITE_TITLE}>
+      <span class="brand-word">SHANE<span class="brand-period">.</span></span>
+    </a>
     <div class="internal-links">
       <HeaderLink href="/">首页</HeaderLink>
       <HeaderLink href="/blog/">文章</HeaderLink>
@@ -15,27 +18,26 @@ import SearchDialog from './SearchDialog.astro';
       <HeaderLink href="/friends/">友链</HeaderLink>
       <HeaderLink href="/about/">关于</HeaderLink>
     </div>
-    <div class="nav-actions"><SearchDialog /><button class="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式"><span class="theme-glyph" aria-hidden="true">◐</span></button></div>
+    <div class="nav-actions">
+      <SearchDialog />
+      <button class="theme-toggle" type="button" aria-label="切换深色模式" title="切换深色模式">
+        <span class="theme-glyph" aria-hidden="true">◐</span>
+      </button>
+    </div>
   </nav>
 </header>
 <script>
   const root = document.documentElement;
-  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
-    const dark = root.dataset.theme === 'dark';
-    root.dataset.theme = dark ? 'light' : 'dark';
-    root.style.colorScheme = dark ? 'light' : 'dark';
-    localStorage.setItem('theme', dark ? 'light' : 'dark');
+  const toggle = document.querySelector<HTMLButtonElement>('.theme-toggle');
+
+  toggle?.addEventListener('click', () => {
+    const nextTheme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = nextTheme;
+    root.style.colorScheme = nextTheme;
+    try {
+      localStorage.setItem('theme', nextTheme);
+    } catch {
+      // Theme switching still works when storage is unavailable.
+    }
   });
 </script>
-<style>
-.site-header{position:sticky;top:0;z-index:50;width:100%;padding:0 24px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--page) 78%,transparent);-webkit-backdrop-filter:saturate(150%) blur(18px);backdrop-filter:saturate(150%) blur(18px)}
-.site-nav{display:flex;align-items:center;justify-content:space-between;gap:28px;width:min(1160px,100%);min-height:68px;margin:0 auto}
-.brand{flex:none;color:var(--ink);text-decoration:none}.brand-word{font-size:15px;font-weight:800;letter-spacing:.12em}.brand-period{color:var(--muted)}
-.internal-links{display:flex;align-items:center;justify-content:center;gap:clamp(10px,2vw,27px)}
-.internal-links :global(a){padding:8px 0;color:var(--muted);font-size:13px;text-decoration:none;white-space:nowrap;transition:color .18s ease}
-.internal-links :global(a:hover),.internal-links :global(a.active){color:var(--ink)}.internal-links :global(a.active){font-weight:650}
-.nav-actions{display:flex;align-items:center;gap:8px}.theme-toggle{display:grid;width:34px;height:34px;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--ink);cursor:pointer}.theme-toggle:hover{background:var(--hover)}
-:global(html[data-theme='dark']) .site-header{background:color-mix(in srgb,var(--page) 78%,transparent)}
-@media(max-width:850px){.site-header{padding:0 18px}.site-nav{min-height:62px;flex-wrap:wrap;gap:0}.brand{margin-right:auto}.nav-actions{margin-left:10px}.internal-links{order:3;width:100%;justify-content:flex-start;gap:22px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}.internal-links::-webkit-scrollbar{display:none}}
-@media(max-width:480px){.site-header{padding:0 14px}.internal-links{gap:19px}.internal-links :global(a){font-size:12px}.brand-word{font-size:14px}}
-</style>
