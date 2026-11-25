@@ -22,7 +22,7 @@ const tags = new Set(allPosts.flatMap(p=>p.data.tags || []));
       <p>关于技术、互联网、工具与日常生活。把遇到的问题记下来，把值得分享的东西整理好。</p>
       <div class="hero-actions"><a class="primary-button" href={withBase('/blog/')}>浏览文章 <span aria-hidden="true">↗</span></a><a class="text-button" href={withBase('/about/')}>关于我</a></div>
     </div>
-    <div class="hero-side"><img src="https://github.com/shane0413.png" alt="Shane 的头像" width="112" height="112" /><span>SHANE / ONLINE</span><small>持续记录，持续探索。</small></div>
+    <div class="hero-side"><img src={withBase('/imgs/shane-pfp.png')} alt="Shane 的头像" width="112" height="112" /><span>SHANE / ONLINE</span><small>持续记录，持续探索。</small></div>
   </section>
   <section class="quote-section" aria-label="随机文案"><div class="quote-topline"><span>NOTE TO SELF</span><span>01 — 26</span></div><QuoteShuffle client:load /></section>
   <section class="contact-strip" aria-label="联系方式">

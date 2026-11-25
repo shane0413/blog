@@ -277,7 +277,6 @@ button { color: inherit; }
   .content-main { padding-top: 48px; padding-bottom: 64px; }
   .hero-copy h1 { font-size: clamp(38px, 10.5vw, 52px); }
   .hero-copy > p { font-size: 15px; }
-  .hero-side small { display: none; }
   .quote-feature { min-height: 110px; }
   .quote-feature p { font-size: 26px; }
   .contact-strip { margin-top: 36px; }
