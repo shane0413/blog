@@ -4,7 +4,7 @@ slug: hello-world
 description: 这是 Shane 个人博客的第一篇文章，简单介绍自己、博客的建立初衷以及未来的内容方向。
 pubDate: 2026-11-25
 updatedDate: 2026-11-25
-heroImage: /imgs/DE47B159-FEFA-4125-AB4E-78901D8F45D4.png
+heroImage: '../../assets/DE47B159-FEFA-4125-AB4E-78901D8F45D4.png'
 category: 个人随笔
 tags:
   - 自我介绍
