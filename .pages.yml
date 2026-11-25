@@ -1,7 +1,7 @@
 
 media:
-  input: src/assets
-  output: ../../assets
+  input: public/imgs
+  output: /imgs
   categories: [image]
 
 content:
@@ -21,7 +21,6 @@ content:
         label: URL 路径
         type: string
         required: true
-        pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
         description: "例如 first-blog，不需要填写开头的 /"
 
       - name: description
