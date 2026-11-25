@@ -10,11 +10,19 @@ content:
     type: collection
     path: src/content/blog
     format: yaml-frontmatter
+    filename: "{fields.slug}.md"
     fields:
       - name: title
         label: 标题
         type: string
         required: true
+
+      - name: slug
+        label: URL 路径
+        type: string
+        required: true
+        pattern: "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        description: "例如 first-blog，不需要填写开头的 /"
 
       - name: description
         label: 文章描述
